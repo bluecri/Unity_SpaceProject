@@ -1,9 +1,11 @@
-[Ll]ibrary/
-[Tt]emp/
-[Oo]bj/
-[Bb]uild/
-[Bb]uilds/
-Assets/AssetStoreTools*
+unitySpacePro/[Ll]ibrary/
+unitySpacePro/[Tt]emp/
+unitySpacePro/[Oo]bj/
+unitySpacePro/[Bb]uild/
+unitySpacePro/[Bb]uilds/
+unitySpacePro/Assets/AssetStoreTools*
+unitySpacePro/Assets/_Extra
+unitySpacePro/Assets/_Extra.zip
 
 # Visual Studio cache directory
 .vs/
