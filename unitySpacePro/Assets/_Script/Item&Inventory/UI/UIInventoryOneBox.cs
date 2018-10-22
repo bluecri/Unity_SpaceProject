@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class UIInventoryOneBox : MonoBehaviour {
-    private InventoryOneBox m_oneBox;
+    private ItemBox m_oneBox;
     private Image m_itemImage;
     private Text m_itemNumText;
 
@@ -14,7 +14,7 @@ public class UIInventoryOneBox : MonoBehaviour {
         m_itemNumText = transform.GetChild(0).Find("ItemNumLabel").GetComponent<Text>();
     }
 
-    public void LoadInventoryOneBox(InventoryOneBox oneBox)
+    public void LoadInventoryOneBox(ItemBox oneBox)
     {
         m_oneBox = oneBox;
 

@@ -44,7 +44,7 @@ public class UIInventory : MonoBehaviour {
         }
 
         m_bindedInventory = newBindedInventory;             // Set binded inventory
-        m_totalBoxNum = m_bindedInventory.SizeCapacity;     // Get total box num from binded inventory
+        m_totalBoxNum = m_bindedInventory.GetInventorySize();     // Get total box num from binded inventory
 
         // Make m_uiInventoryOneBox_List space
         m_uiInventoryOneBox_List = new List<UIInventoryOneBox>(m_totalBoxNum);
@@ -60,8 +60,8 @@ public class UIInventory : MonoBehaviour {
     {
         m_bindedInventory = null;
 
-        List<InventoryOneBox> tempInventoryOneBoxList = m_bindedInventory.InventoryOneBox_List;
-        for (int i = 0; i < m_bindedInventory.SizeCapacity; i++)
+        List<ItemBox> tempInventoryOneBoxList = m_bindedInventory.InventoryOneBox_List;
+        for (int i = 0; i < tempInventoryOneBoxList.Count; i++)
         {
             m_uiInventoryOneBox_List[i].LoadInventoryOneBox(null);
         }
@@ -78,7 +78,7 @@ public class UIInventory : MonoBehaviour {
             return;
 
         float curScrollWidth = gameObject.GetComponent<RectTransform>().rect.width;     // inventory scroll width size
-        int targetBoxNum = m_bindedInventory.SizeCapacity;                              // create box with this num
+        int targetBoxNum = m_bindedInventory.GetInventorySize();                              // create box with this num
 
         // Calculate boxes Row & Column Num
         int boxColNum = Mathf.FloorToInt(curScrollWidth / m_widthOneBox);
@@ -148,8 +148,8 @@ public class UIInventory : MonoBehaviour {
     // Load item infos from inventory
     public void LoadBoxUIInfoInScroll()
     {
-        List<InventoryOneBox> tempInventoryOneBoxList = m_bindedInventory.InventoryOneBox_List;
-        for (int i = 0; i < m_bindedInventory.SizeCapacity; i++)
+        List<ItemBox> tempInventoryOneBoxList = m_bindedInventory.InventoryOneBox_List;
+        for (int i = 0; i < tempInventoryOneBoxList.Count; i++)
         {
             m_uiInventoryOneBox_List[i].LoadInventoryOneBox(tempInventoryOneBoxList[i]);
         }

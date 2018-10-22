@@ -5,20 +5,21 @@ using UnityEditor;
  * Represent Inventory One box in inventory.
  * Contains ItemInfo class, item num
  */
-public class InventoryOneBox
+[System.Serializable]
+public class ItemBox
 {
-    public ItemInfo m_itemInfo;
+    public int      m_itemCode;
     public int      m_itemNum;
 
-    public InventoryOneBox(ItemInfo m_itemInfo, int m_itemNum)
+    public ItemBox(ItemRaw itemRaw, int itemNum)
     {
-        this.m_itemInfo = m_itemInfo;
-        this.m_itemNum = m_itemNum;
+        this.m_itemCode = itemRaw.m_ItemCode;
+        this.m_itemNum = itemNum;
     }
 
     public Sprite GetItemSprite()
     {
-        return m_itemInfo.m_itemSprite;
+        return ItemManager.instance.GetItemRawWithItemCode(m_itemCode).m_itemSprite;
     }
 
     public string GetItemNumStr()

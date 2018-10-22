@@ -11,11 +11,18 @@ using System.IO;
  * Contains capacity(size & weight), list of InventoryOneBox
  */
 [Serializable]
-public class Inventory {
-    private string          m_name;
-    private int             m_sizeCapacity;
-    private float           m_weightCapacity;
-    private List<InventoryOneBox>   m_InventoryOneBox_List;
+public class Inventory : IFileLoadSave
+{
+    [SerializeField]
+    private string  m_name;
+
+    [SerializeField]
+    private float   m_weightCapacity;           // m_curInventoryWeight can exceed m_weightCapacity!
+
+    [SerializeField]
+    private List<ItemBox>   m_InventoryOneBox_List;
+
+    private float m_curInventoryWeight;       // cur Total weight in inventory
 
     public Inventory(string name, int size = 12, float weight = 20.0f)
     {
@@ -23,89 +30,170 @@ public class Inventory {
         SetProperties(size, weight);
     }
 
-    public void SetProperties(int size, float weight)
+    public bool SetSize(int newSize)
     {
-        SizeCapacity = size;
-        WeightCapacity = weight;
-        InventoryOneBox_List = new List<InventoryOneBox>(SizeCapacity);
-        for(int i=0; i<SizeCapacity; i++)
+        if (newSize < 0)
         {
-            InventoryOneBox_List.Add(new InventoryOneBox(null, 0));
+            Debug.Log("[WARN] : Inventory::SetSize : cannot size to under 0");
+            return false;
         }
-    }
-    
-    public void SaveInventory()
-    {
-        string targetFileName = Application.persistentDataPath + FileManager.instance.SaveFolderName + "/" + m_name + ".dat";
-        try
+
+        if (m_InventoryOneBox_List.Count <= newSize)
         {
-            BinaryFormatter bf = new BinaryFormatter();
-            FileStream file = File.Open(targetFileName, FileMode.Create);
-
-            Inventory data = this;
-            bf.Serialize(file, data);
-
-            file.Close();
-        }
-        catch (IOException e)
-        {
-            Debug.Log(e.ToString() + "SavePlayerInfo save error");
-        }
-    }
-    
-    public void LoadInventory()
-    {
-        string targetFileName = Application.persistentDataPath + FileManager.instance.SaveFolderName + "/" + m_name + ".dat";
-        // check file exist
-        if (File.Exists(targetFileName))
-        {
-            try
-            {
-                BinaryFormatter bf = new BinaryFormatter();
-                FileStream file = File.Open(targetFileName, FileMode.Open);
-
-                Inventory loadedData = (Inventory)bf.Deserialize(file);
-                CopyPropertiesToThis(loadedData);
-
-                file.Close();
-            }
-            catch (IOException e)
-            {
-                Debug.Log(e.ToString() + "LoadPlayerInfo Load error");
-                
-            }
+            int addCount = newSize - m_InventoryOneBox_List.Count;
+            AddSize(addCount);
+            return true;
         }
         else
         {
-            Debug.Log("[WARN] : Inventory::LoadPlayerInfo() : No file exist");
-            // Use current inventory (with properties with creation)
+            return DecSize(newSize);
         }
     }
 
-    // copy all properties to this
-    public void CopyPropertiesToThis(Inventory data)
+    public void AddSize(int acc)
     {
-        // ref : http://telegraphrepaircompany.com/using-reflection-loop-properties-object-c/
-        PropertyInfo[] properties = this.GetType().GetProperties();
-        foreach (var property in properties)
+        if (acc < 0)
         {
-            //if (property.GetValue(this, null) != null)
-            property.SetValue(this, property.GetValue(data, null), null);
+            Debug.Log("[WARN] : Inventory::AddSize : cannot size with negative value");
+            return;
         }
+
+        for (int i = 0; i < acc; i++)
+            m_InventoryOneBox_List.Add(null);
     }
 
-    public int SizeCapacity
+    public bool CanDecSize(int dec)
     {
-        get
+        return IsEmpty(dec);
+    }
+
+    // inventory has empty slot with emptyCount or not
+    public bool IsEmpty(int emptyCount = 1)
+    {
+        if (emptyCount < 0)
         {
-            return m_sizeCapacity;
+            Debug.Log("[WARN] : Inventory::IsEmpty : cannot IsEmpty(negative value)");
+            return false;
         }
 
-        set
+        int curEmptyBoxCount = GetEmptySize();
+
+        if (curEmptyBoxCount >= emptyCount)
         {
-            m_sizeCapacity = value;
+            return true;
         }
+
+        return false;
     }
+
+    // how many inventory has empty slot?
+    public int GetEmptySize()
+    {
+        int curEmptyBoxCount = 0;
+        foreach (ItemBox elem in m_InventoryOneBox_List)
+        {
+            if (elem == null)
+                curEmptyBoxCount++;
+        }
+
+        return curEmptyBoxCount;
+    }
+
+    // Decrease size of inventory. If empty slot is not enough, retur false AND not decrease size.
+    public bool DecSize(int dec)
+    {
+        if (false == CanDecSize(dec))
+            return false;
+
+        // move item back to front & reduce size
+        int emptyIndex = 0;
+        int delIndex = m_InventoryOneBox_List.Count - 1;
+
+        int decCount = 0;
+        while (decCount < dec)
+        {
+            // TODO : change null to emptyCheckFunc
+            // Find empty slot
+            while (m_InventoryOneBox_List[emptyIndex] != null)
+            {
+                emptyIndex++;
+            }
+
+            // TODO : change null to emptyCheckFunc
+            if (m_InventoryOneBox_List[delIndex] == null)
+            {
+                m_InventoryOneBox_List.RemoveAt(delIndex);
+            }
+            else
+            {
+                // Move item in delindex to front empty slot
+                m_InventoryOneBox_List[emptyIndex] = m_InventoryOneBox_List[delIndex];
+                m_InventoryOneBox_List.RemoveAt(delIndex);
+            }
+
+            delIndex--;
+            decCount++;
+        }
+
+        return true;
+    }
+
+    public bool SetWeight(float newWeight)
+    {
+        if (newWeight < 0.0)
+        {
+            Debug.Log("[WARN] : Inventory::SetWeight : cannot weight to under 0");
+            return false;
+        }
+        m_weightCapacity = newWeight;
+        return true;
+    }
+
+    public void AccWeight(float acc)
+    {
+        if (acc < 0.0)
+        {
+            Debug.Log("[WARN] : Inventory::AccWeight : cannot acc weight with negative value");
+            return;
+        }
+        m_weightCapacity += acc;
+    }
+
+    public bool DecWeight(float dec)
+    {
+        if (dec < 0.0)
+        {
+            Debug.Log("[WARN] : Inventory::DecWeight : cannot dcc weight with negative value");
+            return false;
+        }
+
+        if (m_weightCapacity < dec)
+        {
+            Debug.Log("[WARN] : Inventory::DecWeight : cannot decrese weight under 0");
+            return false;
+        }
+        m_weightCapacity -= dec;
+        return true;
+    }
+
+    public bool IsToHeavy()
+    {
+        if (m_curInventoryWeight > m_weightCapacity)
+            return true;
+        return false;
+    }
+
+
+    public string GetFileName()
+    {
+        return m_name;
+    }
+
+    public int GetInventorySize()
+    {
+        return m_InventoryOneBox_List.Count;
+    }
+
 
     public float WeightCapacity
     {
@@ -120,7 +208,7 @@ public class Inventory {
         }
     }
 
-    public List<InventoryOneBox> InventoryOneBox_List
+    public List<ItemBox> InventoryOneBox_List
     {
         get
         {
@@ -132,4 +220,16 @@ public class Inventory {
             m_InventoryOneBox_List = value;
         }
     }
+
+
+    private void SetProperties(int size, float weight)
+    {
+        WeightCapacity = weight;
+        InventoryOneBox_List = new List<ItemBox>(size);
+        for (int i = 0; i < size; i++)
+        {
+            InventoryOneBox_List.Add(new ItemBox(null, 0));
+        }
+    }
+
 }

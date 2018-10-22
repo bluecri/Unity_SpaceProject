@@ -9,6 +9,19 @@ public class Inventorymanager : MonoBehaviour
     private Inventory m_playerInventory;        // player inventory info from file
     public UIInventory m_playerUIInventory;     // UI player inventory
 
+    public Inventory m_PlayerInventory
+    {
+        get
+        {
+            return m_playerInventory;
+        }
+
+        set
+        {
+            m_playerInventory = value;
+        }
+    }
+
     private void Awake()
     {
         if (instance == null)
@@ -22,22 +35,17 @@ public class Inventorymanager : MonoBehaviour
         }
     }
 
-    private void Start()
-    {
-        // init UI inventories
-        Init_UIInventory();
-    }
-
-    private void Init_UIInventory()
+    public void Init_Inventorymanager()
     {
         if(m_playerUIInventory != null)
             m_playerUIInventory.Init_UIInventory();
+
+        // need out user inventory init
+        m_playerInventory = new Inventory("userInventory");
     }
 
-    public void LoadUserInventory()
+    public void LoadInventoryToUI()
     {
-        // user inventory
-        m_playerInventory.LoadInventory();      // File -> user inventory
         m_playerUIInventory.BindInventory(m_playerInventory);       // user inventory -> UI user inventory
     }
 }
