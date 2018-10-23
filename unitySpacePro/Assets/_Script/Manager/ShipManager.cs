@@ -9,7 +9,6 @@ public class ShipManager : MonoBehaviour {
         if (instance == null)
         {
             instance = this;
-            DontDestroyOnLoad(instance);
         }
         else
         {

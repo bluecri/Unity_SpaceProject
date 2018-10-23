@@ -44,7 +44,6 @@ public class ItemManager : MonoBehaviour
         if (instance == null)
         {
             instance = this;
-            DontDestroyOnLoad(instance);
         }
         else
         {

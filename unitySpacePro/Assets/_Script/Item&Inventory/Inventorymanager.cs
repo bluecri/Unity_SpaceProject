@@ -27,7 +27,6 @@ public class Inventorymanager : MonoBehaviour
         if (instance == null)
         {
             instance = this;
-            DontDestroyOnLoad(instance);
         }
         else
         {
