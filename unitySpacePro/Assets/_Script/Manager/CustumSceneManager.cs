@@ -24,6 +24,7 @@ public class CustumSceneManager : MonoBehaviour {
         LoadingScene
     }
 
+    
     public void GotoLoadingScene(string targetSceneName)
     {
         // GetScreenShot(Enum_ScreenShotFor.LoadingScene, out screenShotBytes);

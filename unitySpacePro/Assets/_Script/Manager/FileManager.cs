@@ -15,7 +15,7 @@ public class FileManager : MonoBehaviour {
     [HideInInspector]
     public static FileManager instance = null;
 
-    private List<IFileLoadSave> m_targetFileNoRelatedToScene_list;  // list of load&save not related to scene
+    private List<FileLoadSaveElem> m_targetFileNoRelatedToScene_list;  // list of load&save not related to scene
 
     private string m_saveOriginFolderName = null;
     private string m_saveTempFolderName = null;
@@ -35,11 +35,11 @@ public class FileManager : MonoBehaviour {
         // user inventory(Global)
         Inventorymanager invenInstance = Inventorymanager.instance;
 
-        m_targetFileNoRelatedToScene_list = new List<IFileLoadSave>();
+        m_targetFileNoRelatedToScene_list = new List<FileLoadSaveElem>();
         m_targetFileNoRelatedToScene_list.Add(invenInstance.m_PlayerInventory);
     }
 
-    public List<IFileLoadSave> m_TargetFileNoRelatedToScene_list
+    public List<FileLoadSaveElem> m_TargetFileNoRelatedToScene_list
     {
         get
         {
@@ -140,12 +140,12 @@ public class FileManager : MonoBehaviour {
         m_saveTempFolderName = Application.persistentDataPath + topFolderName + "/" + slotFolderName + m_selectedFileIndex.ToString() + "/" + tempForlderName;
     }
 
-    private string GetTypeFileName(IFileLoadSave data)
+    private string GetTypeFileName(FileLoadSaveElem data)
     {
-        return data.GetType().ToString() + "_" + data.GetFileName();
+        return data.GetType().ToString() + "_" + data.GetStrID();
     }
 
-    private string GenTargetFileName(IFileLoadSave data, bool bTemp)
+    private string GenTargetFileName(FileLoadSaveElem data, bool bTemp)
     {
         if (bTemp)
         {
@@ -157,7 +157,7 @@ public class FileManager : MonoBehaviour {
         }
     }
 
-    private void SaveClassData(IFileLoadSave data, bool bTemp)
+    private void SaveClassData(FileLoadSaveElem data, bool bTemp)
     {
         string targetFileName = GenTargetFileName(data, bTemp);
         
@@ -176,7 +176,7 @@ public class FileManager : MonoBehaviour {
         }
     }
 
-    private void LoadClassData(IFileLoadSave data, bool bTemp)
+    private void LoadClassData(FileLoadSaveElem data, bool bTemp)
     {
         string targetFileName = GenTargetFileName(data, bTemp);
 

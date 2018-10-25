@@ -6,7 +6,13 @@ using System.Collections;
  * can save & load through FileManager
  */
 
-public interface IFileLoadSave
+[System.Serializable]
+public class FileLoadSaveElem
 {
-    string GetFileName();
+    public string m_FLSStringID;
+
+    public string GetStrID()
+    {
+        return m_FLSStringID;
+    }
 }

@@ -4,11 +4,12 @@ using UnityEngine;
 
 public class Player : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
-		
-	}
+    public PlayerInfo_FLS m_playerInfo;
 	
+    void InitPlayer()
+    {
+
+    }
 	// Update is called once per frame
 	void Update () {
 		

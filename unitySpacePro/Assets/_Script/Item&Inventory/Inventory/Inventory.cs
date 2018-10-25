@@ -11,7 +11,7 @@ using System.IO;
  * Contains capacity(size & weight), list of InventoryOneBox
  */
 [Serializable]
-public class Inventory : IFileLoadSave
+public class Inventory : FileLoadSaveElem
 {
     [SerializeField]
     private string  m_name;

@@ -1,0 +1,14 @@
+arm
+DU 0.1		
+FB 0.02			-0.04
+-TW 0.99				-1.05
+
+forearm
+ST 1.19
+TW 1.19
+hand
+DU 0.2
+IO -1.11
+shoulder
+DU -1.3392
+FB -0.0394
