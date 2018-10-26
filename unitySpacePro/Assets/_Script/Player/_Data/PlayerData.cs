@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class CharaInfo{
+public class PlayerData{
 
     /*
      * shield += [ - InDmg * (1.0 - shieldArmorPercent) - fixedDmg ]

@@ -5,13 +5,19 @@ using UnityEngine;
 public class Player : MonoBehaviour {
 
     public PlayerInfo_FLS m_playerInfo;
+    public Camera m_mainCam;
 	
-    void InitPlayer()
+    public void Init_Player()
     {
-
+        m_mainCam = Camera.main;
     }
-	// Update is called once per frame
-	void Update () {
+
+    private void Start()
+    {
+    }
+
+    // Update is called once per frame
+    void Update () {
 		
 	}
 }

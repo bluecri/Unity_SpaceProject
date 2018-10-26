@@ -2,12 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-/*
- * This class should be in human player object.
- * This class manage player object & communicate with player in playerManager!
- */
-
-public class PlayerScriptInObject : MonoBehaviour {
+public class HumanInput_Universe : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {

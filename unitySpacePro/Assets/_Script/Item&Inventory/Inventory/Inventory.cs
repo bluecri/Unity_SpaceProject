@@ -14,9 +14,6 @@ using System.IO;
 public class Inventory : FileLoadSaveElem
 {
     [SerializeField]
-    private string  m_name;
-
-    [SerializeField]
     private float   m_weightCapacity;           // m_curInventoryWeight can exceed m_weightCapacity!
 
     [SerializeField]
@@ -26,7 +23,6 @@ public class Inventory : FileLoadSaveElem
 
     public Inventory(string name, int size = 12, float weight = 20.0f)
     {
-        m_name = name;
         SetProperties(size, weight);
     }
 
@@ -181,12 +177,6 @@ public class Inventory : FileLoadSaveElem
         if (m_curInventoryWeight > m_weightCapacity)
             return true;
         return false;
-    }
-
-
-    public string GetFileName()
-    {
-        return m_name;
     }
 
     public int GetInventorySize()

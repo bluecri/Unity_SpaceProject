@@ -13,7 +13,11 @@ public class ItemBox
 
     public ItemBox(ItemRaw itemRaw, int itemNum)
     {
-        this.m_itemCode = itemRaw.m_ItemCode;
+        if (itemRaw == null)
+            this.m_itemCode = -1;
+        else
+            this.m_itemCode = itemRaw.m_ItemCode;
+
         this.m_itemNum = itemNum;
     }
 

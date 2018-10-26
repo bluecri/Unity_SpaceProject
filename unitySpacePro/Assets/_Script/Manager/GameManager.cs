@@ -18,6 +18,7 @@ public class GameManager : MonoBehaviour {
         // Init no dependency
         Inventorymanager.instance.Init_Inventorymanager();  // Init Inventorymanager
         FileManager.instance.Init_FileManager();    // Init FileManager
+        PlayerManager.instance.Init_PlayerManager();
 
     }
 
